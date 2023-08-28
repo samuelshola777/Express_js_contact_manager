@@ -2,7 +2,7 @@
 // open the command dialog prompt and    type
 // npm i express-async-handler
 const asyncHandler = require("express-async-handler");
-const contactModel = require("../model/contact.js");
+const contact = require("../model/contact");
 
 const createContact = asyncHandler(async (req, res) => {
   console.log("The request body is :", req.body);
@@ -11,8 +11,12 @@ const createContact = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error(" All fields are required");
   }
-
-  res.status(201).json({ message: "create contacts" });
+  const contactz = await contact.create({
+    name,
+    email,
+    phone,
+  });
+  res.status(201).json(contactz);
 });
 
 const getContacts = asyncHandler(async (req, res) => {
@@ -20,7 +24,7 @@ const getContacts = asyncHandler(async (req, res) => {
 });
 
 const getContact = asyncHandler(async (req, res) => {
-  const findContact = contactModel.find();
+  const findContact = await contact.find();
   res.status(200).json(findContact);
 });
 
